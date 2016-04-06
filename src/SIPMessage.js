@@ -137,7 +137,7 @@ OutgoingRequest.prototype = {
    * @param {String | Array} value header value
    */
   setHeader: function(name, value) {
-    this.headers[SIP.Utils.headerize(name)] = (value instanceof Array) ? value : [value];
+    this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)] = (value instanceof Array) ? value : [value];
   },
 
   /**
@@ -148,7 +148,7 @@ OutgoingRequest.prototype = {
   getHeader: function(name) {
     var regexp, idx,
       length = this.extraHeaders.length,
-      header = this.headers[SIP.Utils.headerize(name)];
+      header = this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)];
 
     if(header) {
       if(header[0]) {
@@ -174,7 +174,7 @@ OutgoingRequest.prototype = {
    */
   getHeaders: function(name) {
     var idx, length, regexp,
-      header = this.headers[SIP.Utils.headerize(name)],
+      header = this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)],
       result = [];
 
     if(header) {
@@ -205,7 +205,7 @@ OutgoingRequest.prototype = {
     var regexp, idx,
       length = this.extraHeaders.length;
 
-    if (this.headers[SIP.Utils.headerize(name)]) {
+    if (this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)]) {
       return true;
     } else {
       regexp = new RegExp('^\\s*' + name + '\\s*:','i');
@@ -280,7 +280,7 @@ IncomingMessage.prototype = {
   addHeader: function(name, value) {
     var header = { raw: value };
 
-    name = SIP.Utils.headerize(name);
+    if(!this.ua.rawHeaderNames) name = SIP.Utils.headerize(name);
 
     if(this.headers[name]) {
       this.headers[name].push(header);
@@ -295,7 +295,7 @@ IncomingMessage.prototype = {
    * @returns {String|undefined} Returns the specified header, null if header doesn't exist.
    */
   getHeader: function(name) {
-    var header = this.headers[SIP.Utils.headerize(name)];
+    var header = this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)];
 
     if(header) {
       if(header[0]) {
@@ -313,7 +313,7 @@ IncomingMessage.prototype = {
    */
   getHeaders: function(name) {
     var idx, length,
-      header = this.headers[SIP.Utils.headerize(name)],
+      header = this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)],
       result = [];
 
     if(!header) {
@@ -334,7 +334,7 @@ IncomingMessage.prototype = {
    * @returns {boolean} true if header with given name exists, false otherwise
    */
   hasHeader: function(name) {
-    return(this.headers[SIP.Utils.headerize(name)]) ? true : false;
+    return(this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)]) ? true : false;
   },
 
   /**
@@ -346,7 +346,7 @@ IncomingMessage.prototype = {
   parseHeader: function(name, idx) {
     var header, value, parsed;
 
-    name = SIP.Utils.headerize(name);
+    if(!this.ua.configuration.rawHeaderNames) name = SIP.Utils.headerize(name);
 
     idx = idx || 0;
 
@@ -398,7 +398,7 @@ IncomingMessage.prototype = {
   */
   setHeader: function(name, value) {
     var header = { raw: value };
-    this.headers[SIP.Utils.headerize(name)] = [header];
+    this.headers[this.ua.rawHeaderNames ? name : SIP.Utils.headerize(name)] = [header];
   },
 
   toString: function() {

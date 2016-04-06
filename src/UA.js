@@ -910,6 +910,9 @@ UA.prototype.loadConfig = function(configuration) {
       // http://tools.ietf.org/html/rfc3891
       replaces: SIP.C.supported.UNSUPPORTED,
 
+      // Don't camelcase headers automatically 
+      rawHeaderNames: false,
+
       mediaHandlerFactory: SIP.WebRTC.MediaHandler.defaultFactory,
 
       authenticationFactory: checkAuthenticationFactory(function authenticationFactory (ua) {
@@ -1134,6 +1137,7 @@ UA.configuration_skeleton = (function() {
       "instanceId",
       "noAnswerTimeout", // 30 seconds.
       "password",
+      "rawHeaderNames", // false
       "registerExpires", // 600 seconds.
       "registrarServer",
       "reliable",
